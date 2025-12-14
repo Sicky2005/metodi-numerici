@@ -1,17 +1,41 @@
+"""
+    Autore: Sicky2005
+    Corso: Metodi Numerici per l'Ingegneria
+    Descrizione: Programma per il Metodo di Interazione di Punto Fisso
+"""
+
 def fixed_point(func, x0, tol, max_iter):
-    xr = x0
-    iter_count = 0
-    ea = 100.0
 
-    while iter_count < max_iter:
-        xrold = xr
-        xr = func(xrold)
-        iter_count+=1
+    """
+        func = funzione di iterazione g(x) (tale che x = g(x))
+        x0 = stima iniziale dello zero
+        tol = tolleranza
+        max_iter = numero massimo di iterazioni
+    """
 
-        if xr != 0:
-            ea = abs((xr - xrold) / xr) * 100
+    xr = x0 # xr memorizza la stima iniziale dello zero
+    i = 0 # contatore delle iterazioni
+    ea = 1.0 # errore
 
-        if ea < tol or iter_count >= max_iter:
+    while i < max_iter: # esegui il ciclo finché non è raggiunto il numero massimo di iterazioni
+        xrold = xr # xrold memorizza la stima precedente dello zero
+        xr = func(xrold) # calcolo il valore della funzione nel punto di stima dello zero
+        i+=1 # incremento il contatore di 1
+
+        if xr != 0: # se xr è diverso da 0
+            ea = abs((xr - xrold) / xr) # calcolo l'errore relativo
+        else:
+            # fallback se la soluzione è 0 (per evitare divisione per zero nell'errore)
+            ea = abs(xr - xrold)
+
+        # controllo se l'errore è sceso sotto la tolleranza (SUCCESSO)
+        if ea < tol:
+            print(f"Radice trovata con successo.")
             break
 
-    return xr, iter_count
+        # controllo se ho raggiunto il numero massimo di iterazioni (FALLIMENTO)
+        elif i >= max_iter:
+            print("Numero massimo di iterazioni raggiunto senza successo.")
+            break
+
+    return xr, i
