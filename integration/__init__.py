@@ -1,0 +1,1 @@
+from .trapezoidal import trap_rule
